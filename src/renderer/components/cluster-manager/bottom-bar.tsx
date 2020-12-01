@@ -5,10 +5,20 @@ import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { WorkspaceMenu } from "../+workspaces/workspace-menu";
 import { workspaceStore } from "../../../common/workspace-store";
-import { statusBarRegistry } from "../../../extensions/registries";
+import { StatusBarRegistration, statusBarRegistry } from "../../../extensions/registries";
 
 @observer
 export class BottomBar extends React.Component {
+  renderRegistrated(registration: StatusBarRegistration) {
+    const { item } = registration;
+
+    if (item) {
+      return typeof item === "function" ? item() : item;
+    }
+
+    return <registration.components.Item />;
+  }
+
   render() {
     const { currentWorkspace } = workspaceStore;
     // in case .getItems() returns undefined
@@ -24,15 +34,14 @@ export class BottomBar extends React.Component {
           htmlFor="current-workspace"
         />
         <div className="extensions box grow flex gaps justify-flex-end">
-          {Array.isArray(items) && items.map(({ item }, index) => {
-            if (!item) return;
+          {items.map((registration, index) => {
+            if (!registration.item && !registration.components.Item) {
+              return;
+            }
 
             return (
-              <div
-                className="flex align-center gaps item"
-                key={index}
-              >
-                {typeof item === "function" ? item() : item}
+              <div className="flex align-center gaps item" key={index}>
+                {this.renderRegistrated(registration)}
               </div>
             );
           })}
