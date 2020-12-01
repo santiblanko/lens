@@ -444,7 +444,7 @@ export class Extensions extends React.Component {
 
     return extensions.map(extension => {
       const { id, isEnabled, manifest } = extension;
-      const { name, description } = manifest;
+      const { name, description, version } = manifest;
       const isUninstalling = this.extensionState.get(id)?.state === "uninstalling";
 
       return (
@@ -452,6 +452,9 @@ export class Extensions extends React.Component {
           <div className="box grow">
             <div className="name">
               {name}
+            </div>
+            <div className="version">
+              Version: <code className="version">{version}</code>
             </div>
             <div className="description">
               {description}
