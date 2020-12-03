@@ -44,11 +44,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       filename: "[name].js",
       chunkFilename: "chunks/[name].js",
     },
-    stats: {
-      warningsFilter: [
-        /Critical dependency: the request of a dependency is an expression/
-      ]
-    },
+    ignoreWarnings: [
+      /Critical dependency: the request of a dependency is an expression/
+    ],
     resolve: {
       extensions: [
         ".js", ".jsx", ".json",
