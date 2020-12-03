@@ -454,7 +454,7 @@ export class Extensions extends React.Component {
               {name}
             </div>
             <div className="version">
-              Version: <code className="version">{version}</code>
+              {version}
             </div>
             <div className="description">
               {description}
