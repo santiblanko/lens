@@ -7,14 +7,13 @@ import fs from "fs-extra";
 
 export async function generateTrayIcon(
   {
-    outputFilename = "tray_icon", // e.g. output tray_icon_dark@2x.png
+    outputFilename = "trayIconTemplate", // e.g. output trayIconTemplate@2x.png
     svgIconPath = path.resolve(__dirname, "../src/renderer/components/icon/logo-lens.svg"),
     outputFolder = path.resolve(__dirname, "./tray"),
     dpiSuffix = "2x",
     pixelSize = 32,
     shouldUseDarkColors = false, // managed by electron.nativeTheme.shouldUseDarkColors
   } = {}) {
-  outputFilename += shouldUseDarkColors ? "_dark" : "";
   dpiSuffix = dpiSuffix !== "1x" ? `@${dpiSuffix}` : "";
   const pngIconDestPath = path.resolve(outputFolder, `${outputFilename}${dpiSuffix}.png`);
 
@@ -48,6 +47,5 @@ const iconSizes: Record<string, number> = {
 };
 
 Object.entries(iconSizes).forEach(([dpiSuffix, pixelSize]) => {
-  generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: false });
   generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: true });
 });
