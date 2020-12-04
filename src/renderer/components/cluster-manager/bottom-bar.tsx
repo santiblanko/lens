@@ -6,6 +6,7 @@ import { Icon } from "../icon";
 import { WorkspaceMenu } from "../+workspaces/workspace-menu";
 import { workspaceStore } from "../../../common/workspace-store";
 import { StatusBarRegistration, statusBarRegistry } from "../../../extensions/registries";
+import _ from "lodash";
 
 @observer
 export class BottomBar extends React.Component {
@@ -19,10 +20,32 @@ export class BottomBar extends React.Component {
     return <registration.components.Item />;
   }
 
+  renderRegisteredItems() {
+    const items = statusBarRegistry.getItems();
+
+    if (!Array.isArray(items)) {
+      return;
+    }
+
+    return (
+      <div className="extensions box grow flex gaps justify-flex-end">
+        {_.map(statusBarRegistry.getItems(), (registration, index) => {
+          if (!registration?.item && !registration?.components?.Item) {
+            return;
+          }
+
+          return (
+            <div className="flex align-center gaps item" key={index}>
+              {this.renderRegistrated(registration)}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   render() {
     const { currentWorkspace } = workspaceStore;
-    // in case .getItems() returns undefined
-    const items = statusBarRegistry.getItems() ?? [];
 
     return (
       <div className="BottomBar flex gaps">
@@ -33,19 +56,7 @@ export class BottomBar extends React.Component {
         <WorkspaceMenu
           htmlFor="current-workspace"
         />
-        <div className="extensions box grow flex gaps justify-flex-end">
-          {items.map((registration, index) => {
-            if (!registration.item && !registration.components.Item) {
-              return;
-            }
-
-            return (
-              <div className="flex align-center gaps item" key={index}>
-                {this.renderRegistrated(registration)}
-              </div>
-            );
-          })}
-        </div>
+        {this.renderRegisteredItems()}
       </div>
     );
   }
